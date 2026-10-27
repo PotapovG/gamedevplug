@@ -9,12 +9,12 @@ This is a **separate skill**, not a game engine. Preserve the existing game, ref
 
 ## Hard rules
 
-1. **No auto changes to `main`, Core, prod, secrets, saves, Codex Goal or the ref2game installation.** Work on an isolated worktree/branch only when code changes are explicitly requested. Read-only inspection and local capture are fine. Never silently deploy or merge.
+1. **The skill itself must not autonomously alter `main`, Core, prod, secrets, saves, Codex Goal or the ref2game installation.** Work on an isolated worktree/branch for experimental QA and animation alternatives. Read-only inspection and local capture are fine. Its QA verdict is advisory; a parent *existing* continuous Goal may perform its own authorized routine source merge after real checks, while production/public release remains permission-gated. Never create a competing Goal.
 2. **Visual correctness is not a joint-coordinate pass.** If knees are technically continuous but look broken at actual game zoom, the animation FAILS. A reviewer score is evidence, not approval.
 3. **Fun is not TTK.** Winning 18/20 automated runs, a 3–5 minute boss TTK or a high critic score cannot establish enjoyment. Track empty downtime, pattern diversity, meaningful decisions, threat and human feedback. A long, boring fight FAILS.
 4. **No text RPG.** Do not replace readable combat with HUD tutorials revealing boss attacks, phase numbers or player instructions. Express attacks and guard origins diegetically via pose, action, sounds and effects. Narrative dialogue remains narrative.
 5. **One boss health bar only.** If defense exists it must have an in-world source; never disguise additional hit points, invulnerability or hard DPS caps as depth.
-6. **Cost-aware.** One targeted critic per review round, maximum 3 rounds by default, no recursive agents. Preserve the user's existing vX.1...vX.5 cadence. Do not start an additional Goal or a nightly loop automatically.
+6. **Cost-aware and release-cadence aware.** One targeted critic per review round, maximum 3 rounds by default, no recursive agents. When the project activates its 2026-10-27 policy, preserve working vX.1...vX.9 and the next v(X+1).0 real private playable build; never accidentally trigger an old .5 build. Do not start an additional Goal or a nightly loop automatically. Read ShlepaGame's current AGENTS.md and CONTINUOUS_GOAL.md instead of treating this skill as an alternate Goal coordinator.
 7. **No forced technology choice.** Compare (A) current cut-out rig, (B) hybrid authored gait + procedural weapon aim, optionally (C) pre-rendered 3D→2D frames. Keep actual sprite style, design and combat control identical. Change an engine only after evidence.
 8. **Honest gates.** Distinguish automated PASS, reviewer opinion and human owner approval. A missing video or real player test is **UNVERIFIED**, never PASS.
 
