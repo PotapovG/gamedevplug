@@ -1,27 +1,87 @@
-# Shlepa Quality — Codex game-dev skill
+# Shlepa Quality — самостоятельный скилл для Codex
 
-A standalone Codex skill for animation QA, boss playtesting and blind A/B reviews in **ShlepaGame**.
+Это **готовый отдельный скилл Codex**, а не ChatGPT-плагин из каталога и не замена игрового движка.
+Он не меняет и не включает `ref2game`. Все свои скрипты содержатся в архиве и работают локально без сетевых API.
 
-This repository hosts a self-contained skill; it does **not** include, replace or modify `ref2game`.
+## Установка (macOS / Linux)
 
-## Install
+1. Скачать исходники командой `git clone https://github.com/PotapovG/gamedevplug.git`.
+2. В Terminal выполнить:
+   ```bash
+   cd gamedevplug
+   bash install.sh
+   ```
+3. Открыть **новую** сессию Codex внутри проекта `ShlepaGame`.
+4. Попросить:
+   ```text
+   Используй $shlepa-quality в режиме read-only-audit.
+   Проведи независимый аудит кадров капитана и свиньи на текущем SHA.
+   Ни main, ни Core, ни ref2game не меняй.
+   ```
 
-```bash
-git clone https://github.com/PotapovG/gamedevplug.git
-cd gamedevplug
-bash install.sh
+**Важно:** само наличие навыка не правит игру. Его надо явно вызвать и дать задачу. В Codex версиях без автоматического обнаружения дополнительных skills укажите полный путь: `~/.codex/skills/shlepa-quality/SKILL.md`.
+
+## Что внутри
+
+- **`animation`** — независимая оценка реального движения персонажей и сравнение IK/гибридных анимаций.
+- **`boss`** — сценарий создания отдельной тестовой арены на базе **того же** движка и игровой боевой логики; текстовые спойлеры и HP-губки — провал приёмки.
+- **`sprite-production`** — производственные требования к спрайтам, pivots, суставам и прозрачности.
+- **`blind-review`** — скрипт случайных A/B без утечки идентичности вариантов и с блокировкой вердикта до раскрытия.
+- **`read-only-audit`** — проверить проблему без правок.
+- **`boss_metrics.py`** — замер паттернов/долгих пауз по CSV событий *реального* геймплея. **Не** выдаёт численную оценку интересности.
+
+Не меняет Codex Goal, не создаёт ещё одного менеджера задач, не переписывает `AGENTS.md`, не меняет runtime-промпт ref2game и не запускает дополнительные модели автоматически.
+
+## Два первых запроса для Codex
+
+### Исправление анимации
+
+```text
+Используй $shlepa-quality (animation + sprite-production) на ShlepaGame.
+Референс проблемы: screenshot v9.2 с капитаном и героем — сломанные ноги, неверная
+стойка и некрасивые кисти, несмотря на успешный ref2game QA.
+Сначала только аудит текущих ассетов и рига, поставь визуально проверяемую планку.
+На отдельной ветке — прототип A: текущий IK, B: authored walk/run + ограниченный IK рук.
+Сравни в одинаковом 720p/1280x800 viewport и в реальном игровом масштабе.
+Не трогай main/Core/ref2game, не переделывай остальных героев.
+Предоставь видео/контактные листы, исходный SHA, слабые стороны каждого и вердикт.
+Не объявляй успехом только numeric joint QA, критик не заменяет owner approval.
 ```
 
-Restart Codex and invoke `$shlepa-quality`. For QA, first work in a disposable branch or worktree, inspect the evidence, and do not merge or deploy without approval.
+### Боссы
 
-## Contents
+```text
+Используй $shlepa-quality (boss) и задачи UX-14, BOSS-10, BOSS-11, UX-15.
+Сначала отделённая игровая арена с настоящими параметрами и AI из ShlepaGame.
+Сделай капитана интересным: разнообразные атаки и комбинации, честные короткие
+телеграфы, никаких монотонных 5–8 минут, только один HP bar и нет HUD-инструкций.
+Проверь на практике слабый/сильный билд и альтернативных героев.
+Дай реальные видео/события, метрики пустых пауз и критерии человеческого теста.
+Не деплой, не merge, не модернизируй ref2game.
+```
 
-- `skill/shlepa-quality/SKILL.md` — Codex entrypoint
-- `skill/shlepa-quality/references/` — animation, boss design and QA policy
-- `skill/shlepa-quality/scripts/` — session management, blind A/B, contact sheets and boss metrics
-- `examples/` — event dataset
-- `install.sh` — safe local install into `${CODEX_HOME:-~/.codex}/skills/`
+## Быстрые локальные команды
 
-This is a **quality harness**, not a replacement for human playtests or the game engine. See `NOTICE.md` for upstream inspirations and attribution.
+```bash
+# Из установленного скилла
+S="$HOME/.codex/skills/shlepa-quality/scripts"
+python3 "$S/session.py" init --kind animation --name captain-v9 --out /tmp/quality-reviews
+python3 "$S/session.py" init --kind boss --name pig-v9 --out /tmp/quality-reviews
+python3 "$S/blind_ab.py" prepare --a ./baseline.png --b ./candidate.png --out /tmp/review-pair
+# дать критику ТОЛЬКО /tmp/review-pair/public ; заполнить verdict.md
+python3 "$S/blind_ab.py" lock --dir /tmp/review-pair
+python3 "$S/blind_ab.py" reveal --dir /tmp/review-pair
+python3 "$S/boss_metrics.py" ./events.csv
+```
 
-MIT license. No production deployment or changes to ShlepaGame.
+## GitHub и происхождение исходников
+
+Этот репозиторий содержит самостоятельные исходники навыка, без `ref2game`. Концепции проверки игровых механик, визуальной анимации и экономного QA изучены по открытым репозиториям Studio Igor; копии сторонних скиллов в составе отсутствуют. Оригинальные GitHub-форки не являются частью этого репозитория и для установки не нужны. См. `NOTICE.md`.
+
+## Ограничения
+
+Ни один скрипт не оценивает сюжетный интерес или анатомию автоматически как «принято». Босс-арена создаётся Codex как изолированная рабочая сцена с фактическим симулятором проекта; она не может быть предсобрана универсальным скриптом без доступа к конкретной ревизии игры. Отчёт о визуальном качестве остаётся `OWNER: PENDING`, пока человек не сыграет.
+
+Поддержка `gauntlet-loop` из источника может быть установлена отдельно по желанию, но в этот пакет она **не включена**: собственный A/B и ограниченные процедуры здесь самодостаточны, а внешний долгий Goal может конфликтовать с вашим текущим Goal.
+
+См. `NOTICE.md` о происхождении идей и лицензиях.

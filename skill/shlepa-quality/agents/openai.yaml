@@ -1,0 +1,4 @@
+interface:
+  display_name: "Shlepa Quality"
+  short_description: "Independent boss and animation playtest gates"
+  default_prompt: "Use $shlepa-quality to audit this ShlepaGame issue. First gather exact-source evidence, don't change main, Core or ref2game, and report numeric QA separately from owner playtest approval."

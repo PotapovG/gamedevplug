@@ -1,0 +1,13 @@
+t,event,attack
+0,tell,charge
+0.85,impact,charge
+1.1,recover,charge
+2,tell,fan
+3.05,impact,fan
+3.5,recover,fan
+5,tell,slam
+5.7,impact,slam
+6,recover,slam
+7,tell,charge
+7.8,impact,charge
+8.1,recover,charge
